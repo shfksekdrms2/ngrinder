@@ -1,11 +1,13 @@
 package org.ngrinder.infra.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
 import org.ngrinder.infra.spring.ApiExceptionHandlerResolver;
 import org.ngrinder.infra.spring.RemainedPathMethodArgumentResolver;
 import org.ngrinder.infra.spring.UserHandlerMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +25,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import java.text.DateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 @Configuration
 @ComponentScan(
@@ -121,5 +125,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			, "/**/*.html" , "/**/*.gif" , "/**/*.ico" , "/**/*.woff2"
 			, "/**/*.woff" , "/**/*.ttf"};
 		registry.addResourceHandler(staticPathPatterns).addResourceLocations(this.resourceProperties.getStaticLocations()).setCachePeriod(3600);
+	}
+
+	@Bean
+	public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+		return builder -> {
+			builder.dateFormat(DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT));
+			builder.timeZone(TimeZone.getDefault());
+			builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+		};
 	}
 }
