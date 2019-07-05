@@ -69,7 +69,6 @@
 
         mounted() {
             this.$nextTick(() => {
-                $('[data-toggle="popover"]').popover('destroy');
                 $('[data-toggle="popover"]').popover({ trigger: 'hover', container: '#add-host-modal' });
             });
         }

@@ -1,12 +1,11 @@
 <template>
-    <div class="span6 panel-container">
-        <div class="page-header">
+    <div class="panel-container">
+        <div class="pb-2 mt-4 mb-3 border-bottom">
             <h4 :data-step="introJsDataSetp" :data-intro="introJsDataIntro" v-text="title"></h4>
         </div>
-
-        <div class="well">
+        <div class="card bg-light">
             <br>
-            <table class="table table-striped ellipsis">
+            <table class="table ellipsis">
                 <colgroup>
                     <col width="350">
                 </colgroup>
@@ -17,7 +16,7 @@
                             <span v-if="entry.new" class="label label-info" v-text="'new'"></span>
                             <a :href="entry.link" target="_blank" v-text="entry.title"></a>
                         </td>
-                        <td>{{entry.lastUpdatedDate | dateFormat('YYYY-MM-DD') }}</td>
+                        <td>{{ entry.lastUpdatedDate | dateFormat('YYYY-MM-DD') }}</td>
                     </tr>
                 </template>
                 <tr>
@@ -64,7 +63,15 @@
 
 <style lang="less" scoped>
     .panel-container {
+        width: 460px;
+        margin-left: 20px;
+
+        .card {
+            padding: 10px;
+        }
+
         table {
+            background-color: #f8f9fa;
             font-size: 12px;
         }
     }

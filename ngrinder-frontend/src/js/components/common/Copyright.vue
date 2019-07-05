@@ -1,5 +1,5 @@
 <template>
-    <div id="foot_div">
+    <div class="copyright-container">
         <div class="credit">
             <a href="https://naver.github.io/ngrinder" target="_blank" v-text="`nGrinder v${version}`"></a>
         </div>
@@ -22,11 +22,18 @@
 </script>
 
 <style lang="less" scoped>
-    #foot_div {
+    .copyright-container {
+        font-size: 12px;
         position: fixed;
+        height: 40px;
         left: 0;
         bottom: 0;
         width: 100%;
+        background-color: #f5f4f2;
+
+        a:hover {
+            text-decoration: none;
+        }
 
         .credit {
             height: 100%;

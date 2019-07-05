@@ -18,10 +18,7 @@ thead tr th {
     height: auto !important;
     margin: 0 auto -40px;
 }
-#foot_div {
-    background-color: #f5f4f2;
-    height: 40px;
-}
+
 #foot_div.container:before, .container:after {
     display: table;
     line-height: 0;
@@ -140,10 +137,6 @@ table.ellipsis td.ellipsis {
 
 .container .well {
 	padding:10px;
-}
-
-.container .search-bar {
-	margin: 10px 0 20px
 }
 
 @media (min-width: 992px) {

@@ -284,7 +284,6 @@
             this.durationMaxHour = (durationHour > this.config.maxRunHour) ? durationHour : this.config.maxRunHour;
 
             this.$nextTick(() => {
-                $('[data-toggle="popover"]').popover('destroy');
                 $('[data-toggle="popover"]').popover({ trigger: 'hover', container: '#config-container' });
                 this.$refs.rampUp.updateRampUpChart();
             });

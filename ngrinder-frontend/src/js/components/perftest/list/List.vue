@@ -2,14 +2,14 @@
     <div class="container perftest-list-container">
         <vue-headful title="Performance Test"></vue-headful>
         <div class="img-unit"></div>
-        <div class="pull-right current_running_status-container">
-            <code id="current_running_status" v-text="runningSummary"></code>
+        <div class="current-running-status-container">
+            <code v-text="runningSummary"></code>
         </div>
 
-        <search-bar ref="searchBar" @filter-running="runQueryFilter" @filter-schduled="runQueryFilter" @create="createPerftest"
+        <search-bar ref="searchBar" @filter-running="runQueryFilter" @filter-schduled="runQueryFilter" @create="$router.push('/perftest/new')"
                     @search="getPerfTest" @change-tag="getPerfTest" @delete-selected-tests="deleteTests(selectedTests.toString())"></search-bar>
 
-        <table class="table table-striped table-bordered ellipsis" id="test_table">
+        <table class="table table-bordered ellipsis" id="test-table">
             <colgroup>
                 <col width="30">
                 <col width="50">
@@ -26,17 +26,17 @@
                 <col width="60">
             </colgroup>
             <thead>
-                <tr id="head_tr_id">
-                    <th class="nothing">
+                <tr>
+                    <th>
                         <input type="checkbox" v-model="selectAll" class="checkbox" @change="changeSelectAll">
                     </th>
                     <th class="center nothing status" data-step="4" :data-intro="i18n('intro.list.perftest.status')">
                         <span v-text="i18n('common.label.status')"></span>
                     </th>
-                    <th id="test_name">
+                    <th>
                         <span v-text="i18n('perfTest.list.testName')"></span>
                     </th>
-                    <th id="script_name">
+                    <th>
                         <span v-text="i18n('perfTest.list.scriptName')"></span>
                     </th>
                     <th class="nothing">
@@ -46,7 +46,7 @@
                     <th v-if="ngrinder.config.clustered" id="region">
                         <span v-text="i18n('common.region')"></span>
                     </th>
-                    <th id="start_time">
+                    <th>
                         <span v-text="i18n('perfTest.list.startTime')"></span>
                     </th>
                     <th class="nothing">
@@ -56,8 +56,8 @@
                     <th id="tps">
                         <span v-text="i18n('perfTest.list.tps')"></span>
                     </th>
-                    <th id="mean_test_time" :title="i18n('perfTest.list.meantime')" v-text="'MIT'"></th>
-                    <th id="errors" class="ellipsis">
+                    <th :title="i18n('perfTest.list.meantime')" v-text="'MIT'"></th>
+                    <th class="ellipsis">
                         <span v-text="i18n('perfTest.list.errorRate')"></span>
                     </th>
                     <th class="nothing small-border">
@@ -75,21 +75,23 @@
                             <input type="checkbox" v-model="selectedTests" class="perf_test checkbox" :value="test.id" :disabled="!test.deletable">
                         </td>
                         <td class="center">
-                            <div class="ball" data-html="true"
-                                 data-toggle="popover"
-                                 :id="`ball_${test.id}`"
-                                 :title="test.status"
-                                 :data-content="`${test.progressMessage}<br><b>${test.lastProgressMessage}</b>`.replace(/\n/g, '<br>')">
-                            <img class="status" :src="`/img/ball/${test.iconName}`">
-                            </div>
+                            <a class="ball"
+                               data-html="true"
+                               data-toggle="popover"
+                               data-trigger="hover"
+                               :id="`ball_${test.id}`"
+                               :title="test.status"
+                               :data-content="`${test.progressMessage}<br><b>${test.lastProgressMessage}</b>`.replace(/\n/g, '<br>')">
+                               <img class="status" :src="`/img/ball/${test.iconName}`">
+                            </a>
                         </td>
                         <td class="ellipsis">
                             <div class="ellipsis" :title="test.testName" data-toggle="popover" data-html="true" :data-content="getTestNamePopoverContent(test).replace(/\n/g, '<br>')">
-                                <a @click.prevent="$router.push(`/perftest/${test.id}`)" target="_self" class="clickable" v-text="test.testName"></a>
+                                <a href="" @click.prevent="$router.push(`/perftest/${test.id}`)" target="_self" class="clickable" v-text="test.testName"></a>
                             </div>
                         </td>
                         <td class="ellipsis">
-                            <div class="ellipsis" data-toggle="popover" data-html="true"
+                            <div class="ellipsis" data-toggle="popover" data-html="true" data-trigger="hover"
                                 :data-content="`${test.scriptName}<br> - ${i18n('script.list.revision')} : ${(test.scriptRevision)}`"
                                 :title="i18n('perfTest.list.scriptName')">
                                 <a v-if="isAdmin" :href="`/script/detail/${test.scriptName}?r=${(test.scriptRevision)}&ownerId=${(test.createdUserId)}`" v-text="test.scriptName"></a>
@@ -98,7 +100,7 @@
                         </td>
                         <td>
                            <div class="ellipsis" data-toggle="popover" :title="i18n('perfTest.list.participants')" data-html="true"
-                                :data-content="getOwnerPopoverContent(test).replace(/\n/g, '<br>')">
+                                data-trigger="hover" :data-content="getOwnerPopoverContent(test).replace(/\n/g, '<br>')">
                                 <span v-if="isAdmin" v-text="test.createdUserName"></span>
                                 <span v-else v-text="test.lastModifiedUserName"></span>
                             </div>
@@ -110,20 +112,22 @@
                             <span v-if="test.startTime">{{ test.startTime | dateFormat('YYYY-MM-DD HH:mm') }}</span>
                         </td>
                         <td>
-                            <div v-if="test.threshold === THRESHOLD_TYPE_DURATION" :title="i18n('perfTest.list.duration')" v-text="test.duration"></div>
+                            <div v-if="test.threshold === 'D'" :title="i18n('perfTest.list.duration')" v-text="test.duration"></div>
                             <div v-else v-text="test.runCount" :title="i18n('perfTest.list.runCount')"></div>
                         </td>
                         <td>
-                            <span v-if="test.tps" v-text="test.tps.toFixed(1)"></span>
+                            <span v-if="$utils.exists(test.tps)" v-text="test.tps.toFixed(1)"></span>
                         </td>
                         <td>
-                            <span v-if="test.meanTestTime" v-text="test.meanTestTime.toFixed(1)"></span>
+                            <span v-if="$utils.exists(test.meanTestTime)" v-text="test.meanTestTime.toFixed(1)"></span>
                         </td>
                         <td>
-                            <div class="ellipsis" data-toggle="popover" data-html="true" data-placement="top" v-text="getErrorRate(test.tests, test.errors)"></div>
+                            <div class="ellipsis" data-toggle="popover" data-html="true" data-trigger="hover"
+                                 data-placement="top" v-text="getErrorRate(test.tests, test.errors)"></div>
                         </td>
                         <td>
-                            <div class="ellipsis" data-toggle="popover" data-html="true" data-placement="left" v-text="(test.vuserPerAgent) * (test.agentCount)"></div>
+                            <div class="ellipsis" data-toggle="popover" data-html="true" data-trigger="hover"
+                                 data-placement="left" v-text="(test.vuserPerAgent) * (test.agentCount)"></div>
                         </td>
                         <td class="center">
                             <i v-if="test.reportable" @click="showChart(index)" :title="i18n('perfTest.action.showChart')" class="icon-download test-display pointer-cursor"></i>
@@ -136,10 +140,17 @@
             </tbody>
         </table>
         <intro-button></intro-button>
-        <div v-show="totalElements > 0" class="pagination dataTables_paginate">
+        <div v-show="totalElements > 0">
             <paginate
+                pageClass="page-item"
+                prevClass="page-item"
+                nextClass="page-item"
+                pageLinkClass="page-link"
+                prevLinkClass="page-link"
+                nextLinkClass="page-link"
+                containerClass="pagination pagination-sm"
                 v-model="currentPage"
-                :pageCount="totalActivationPageCount"
+                :page-count="totalActivationPageCount"
                 :page-range="COUNT_OF_TEST_PER_PAGE"
                 :click-handler="changeActivationPage"
                 :prev-text="`← ${i18n('common.paging.previous')}`"
@@ -166,7 +177,6 @@
         components: { IntroButton, vueHeadful, SearchBar, SmallChart, Paginate },
     })
     export default class PerfTestList extends Mixins(Base, MessagesMixin) {
-        THRESHOLD_TYPE_DURATION = 'D';
         COUNT_OF_TEST_PER_PAGE = 10;
 
         totalActivationPageCount = 1;
@@ -258,16 +268,11 @@
         }
 
         initPopover() {
-            $('[data-toggle="popover"]').popover('destroy');
-            $('[data-toggle="popover"]').popover({ trigger: 'hover', container: '#test_table' });
+            $('[data-toggle="popover"]').popover();
         }
 
         getErrorRate(tests, errors) {
-            if (!tests || !errors) {
-                return '';
-            }
-
-            if (!tests && !errors) {
+            if (!this.$utils.exists(tests) || !this.$utils.exists(errors)) {
                 return '';
             }
             return `${(errors / (tests + errors) * 100).toFixed(1)}%`;
@@ -325,10 +330,6 @@
             this.$refs.smallChart[index].toggleDisplay();
         }
 
-        createPerftest() {
-            this.$router.push('/perftest/new');
-        }
-
         updatePerftestStatus() {
             const ids = this.autoUpdateTargets.map(test => test.id).join(',');
             if (ids) {
@@ -350,8 +351,8 @@
                         this.runningSummary = `${res.data.perfTestInfo.length} ${this.i18n('perfTest.list.runningSummary')}`;
 
                         const $ball = $(`#ball_${this.tests[target.index].id}`);
-                        $ball.attr('data-original-title', status[index].name);
-                        $ball.data('popover').options.content = status[index].message;
+                        $ball.attr('title', status[index].name);
+                        $ball.attr('data-content', status[index].message);
                     });
                 }).finally(() => this.updateStatusTimeoutId = setTimeout(this.updatePerftestStatus, 2000));
             } else {
@@ -363,6 +364,8 @@
 
 <style lang="less" scoped>
     .perftest-list-container {
+        padding: 0;
+
         .img-unit {
             background-image: url('/img/bg_perftest_banner_en.png');
             height: 110px;
@@ -371,18 +374,27 @@
         }
 
         table {
-            th.status {
-                padding-left: 3px;
+            th, td {
+                padding: 8px;
             }
+
+            th {
+                border-bottom: none;
+            }
+
             font-size: 12px;
             width: 940px;
             margin-bottom: 6px;
         }
 
-        .current_running_status-container {
-            margin-top: -20px;
+        .current-running-status-container {
+            text-align: right;
+            margin-top: -19px;
 
-            #current_running_status {
+            code {
+                padding: 0 4px;
+                border-radius: 2px;
+                background-color: white;
                 width: 300px;
             }
         }
@@ -396,6 +408,16 @@
             min-width: 200px;
             max-width: 600px;
             max-height: 500px;
+        }
+
+        .pagination {
+            margin-top: 8px !important;
+        }
+    }
+
+    .intro-button-container {
+        .intro-button-title {
+            margin-right: -30px;
         }
     }
 </style>

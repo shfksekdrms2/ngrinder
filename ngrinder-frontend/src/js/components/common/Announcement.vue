@@ -2,12 +2,12 @@
     <div class="container">
         <div v-if="announcement" id="announcement-container">
             <div class="alert alert-block">
-                <div class="page-header">
+                <div class="border-bottom">
                     <span>
-                        <span v-if="ngrinder.config.hasNewAnnouncement" class="label label-important" v-text="'new'"></span>
+                        <span v-if="ngrinder.config.hasNewAnnouncement" class="badge badge-danger" v-text="'new'"></span>
                         <span class="announcement-title" v-text="i18n('announcement.title')"></span>
                         <span class="clickable pull-right" id="hide-announcement" @click.prevent="toggleDisplay">
-                            <i id="announcement-icon" :class="{'icon-plus': hide, 'icon-minus': !hide}"></i>
+                            <i id="announcement-icon" class="glyphicon glyphicon-search" :class="{'oi-plus': hide, 'oi-minus': !hide}"></i>
                         </span>
                     </span>
                 </div>
@@ -65,19 +65,24 @@
 
 <style lang="less" scoped>
     .container {
-        padding-top: 40px;
+        padding: 40px 0 0 0;
 
         .alert-block {
-            padding:5px 20px;
-            margin-bottom:0;
+            color: #c09853;
+            padding: 5px 20px;
+            margin-bottom: 0;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+            background-color: #fcf8e3;
+            border: 1px solid #fbeed5;
+            border-radius: 4px;
 
-            .page-header {
-                margin:0;
-                padding-bottom:2px;
+            .border-bottom {
+                margin: 0;
+                padding-bottom: 2px;
 
                 .announcement-title {
-                    margin-top:0;
-                    margin-bottom:0;
+                    margin-top: 0;
+                    margin-bottom: 0;
                     font-size: 15px;
                 }
             }

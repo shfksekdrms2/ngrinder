@@ -82,7 +82,6 @@
                 this.createChartExportButton(this.i18n('perfTest.report.exportImg.button'), this.i18n('perfTest.report.exportImg.title'));
             }).catch(() => this.showErrorMsg(this.i18n('common.message.loading.error')));
 
-            $('[data-toggle="popover"]').popover('destroy');
             $('[data-toggle="popover"]').popover({ trigger: 'hover', container: '#tps-title' });
         }
 

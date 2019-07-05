@@ -69,6 +69,12 @@
 
 </script>
 
+<style lang="less">
+    .select2-no-results, .select2-input {
+        font-size: 12px;
+    }
+</style>
+
 <style lang="less" scoped>
     @import '../../../plugins/select2/select2.css';
 </style>

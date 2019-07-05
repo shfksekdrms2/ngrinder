@@ -1,7 +1,7 @@
 <template>
-    <div class="pull-right intro-button-container clickable" rel="popover"
+    <div class="intro-button-container clickable" rel="popover"
          :title="title" data-html="ture" data-placement="left"
-         :data-content="i18n('intro.public.button.show')" id="introButton" @click="startIntroJs">
+         :data-content="i18n('intro.public.button.show')" @click="startIntroJs">
         <code class="intro-button-title" v-text="title"></code>
     </div>
 </template>
@@ -28,7 +28,21 @@
 </script>
 
 <style lang="less" scoped>
-    .intro-button-title {
-        margin-right: -30px;
+    .intro-button-container {
+        text-align: right;
+
+        code {
+            border-radius: 2px;
+            font-size: 12px;
+            padding: 2px 4px;
+            color: #d14;
+            background-color: #f7f7f9;
+            border: 1px solid #e1e1e8;
+            white-space: nowrap;
+        }
+
+        .intro-button-title {
+            margin-right: -35px;
+        }
     }
 </style>

@@ -108,8 +108,6 @@
         mounted() {
             this.query = this.$route.query.query;
             this.$nextTick(() => {
-                $('[data-toggle="popover"]').popover('destroy');
-
                 $('#svn-url').popover({ trigger: 'hover' });
                 $('#script-sample').popover({ trigger: 'hover' });
 

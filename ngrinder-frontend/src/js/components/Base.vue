@@ -27,7 +27,22 @@
 </script>
 
 <style lang="less">
+    .popover {
+        width: auto;
+        min-width: 300px;
+        max-width: 600px;
+        font-size: 12px;
+
+        .popover-body {
+            line-height: 20px;
+        }
+    }
+
     #ngrinder-main-content-wrapper {
+        .container {
+            width: 940px;
+        }
+
         .clickable {
             cursor: pointer;
         }
@@ -52,17 +67,6 @@
 
         .hide {
             display: none;
-        }
-
-        .popover {
-            width: auto;
-            min-width: 300px;
-            max-width: 600px;
-            max-height: 500px;
-
-            .popover-content {
-                line-height: 18px;
-            }
         }
 
         .no-padding {

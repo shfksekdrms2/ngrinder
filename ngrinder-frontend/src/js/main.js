@@ -27,9 +27,13 @@ import Copyright from 'common/Copyright.vue';
 import Navigator from 'common/navigator/Navigator.vue';
 import Messages from 'common/Messages.vue';
 
-import VeeValidateInitializer from 'vee-validate-initializer.js'
+import VeeValidateInitializer from 'vee-validate-initializer.js';
+import Utils from 'utils.js';
 
 import 'moment-duration-format';
+import 'expose-loader?$!expose-loader?jQuery!jquery';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
 
 axios.interceptors.request.use(config => {
     if (typeof config.params === 'undefined') {
@@ -52,6 +56,7 @@ Vue.use(VeeValidate, {inject: false});
 
 Vue.prototype.$moment = moment;
 Vue.prototype.$http = axios;
+Vue.prototype.$utils = Utils;
 Vue.prototype.$EventBus = new Vue();
 Vue.prototype.$Event = Event;
 Vue.prototype.initEventBus = () => Vue.prototype.$EventBus = new Vue();

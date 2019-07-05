@@ -135,7 +135,6 @@
                     this.report.tps = res.data.tps;
                     this.dataLoadFinished = true;
                     this.$nextTick(() => {
-                        $('[data-toggle="popover"]').popover('destroy');
                         $('[data-toggle="popover"]').popover({ trigger: 'hover', container: '#report-container' });
                         new Chart('tps-chart', [this.report.tps], this.report.interval).plot();
                     });
